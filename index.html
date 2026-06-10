@@ -1,0 +1,567 @@
+
+    </header>
+
+    <!-- Tab Navigation Bar -->
+    <nav class="tab-bar">
+      <div class="tab-bar-inner">
+        <button class="tab-btn active" data-tab="home">😊 Dashboard</button>
+        <button class="tab-btn" data-tab="scratchpad">📋 Spreadsheet Notes (SLL)</button>
+        <button class="tab-btn" data-tab="discovery">🏕️ Booking & Discovery</button>
+        <button class="tab-btn" data-tab="reservations">📚 My Bookings & History</button>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+
+      <!-- ─────────────────────────────────────
+           TAB A: DASHBOARD
+      ───────────────────────────────────── -->
+      <section id="tab-home" class="tab-section active">
+        <div class="grid-12">
+
+          <!-- Left column: weather + nav help -->
+          <div class="col-4 flex-col gap-4">
+
+            <!-- Weather widget -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">🌤 Camp Weather</span>
+                <span class="muted-tag">Simulated</span>
+              </div>
+              <div id="weather-display" class="weather-box">
+                <!-- Filled by script.js based on check-in date -->
+                <span class="weather-icon">☀️</span>
+                <div>
+                  <span class="weather-temp">--°C</span>
+                  <span class="weather-label">Loading...</span>
+                </div>
+              </div>
+              <p id="weather-rec" class="tip-box">Pick a check-in date to see conditions.</p>
+            </div>
+
+            <!-- Navigation help card -->
+            <div class="card">
+              <span class="tag-label">Navigation Help</span>
+              <h4 class="card-title mt-1">Looking for Booking?</h4>
+              <p class="muted-text mt-1 mb-3">
+                Head to the <strong>Booking & Discovery</strong> tab above to search and reserve places.
+              </p>
+              <button class="btn-primary w-full" onclick="switchTab('discovery')">
+                Go to Booking Section 🏕️
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Right column: banner + deal + vibe check -->
+          <div class="col-8 flex-col gap-4">
+
+            <!-- Brand banner -->
+            <div class="hero-banner">
+              <div class="hero-bg-emoji">🐻🌲</div>
+              <span class="hero-tag">Welcome to StackIt</span>
+              <h2 class="hero-title">The Bear Stack Route Engine</h2>
+              <p class="hero-desc">
+                StackIt is a travel planner built on custom data structures:
+                Singly Linked List for notes, QuickSort to order listings,
+                and Binary Search to filter by budget — all running in Python.
+              </p>
+            </div>
+
+            <!-- Concierge deal card (hidden until a deal is triggered) -->
+            <div id="deal-card" class="deal-card hidden">
+              <div class="deal-badge">⭐ Special Deal</div>
+              <div class="deal-body">
+                <img id="deal-thumb" src="" alt="Deal property" class="deal-img" />
+                <div class="deal-info">
+                  <span id="deal-label" class="tag-orange">AI RECOMMENDATION</span>
+                  <h3 id="deal-name" class="deal-title"></h3>
+                  <p id="deal-pitch" class="deal-pitch"></p>
+                  <div class="deal-footer">
+                    <div>
+                      <span id="deal-original" class="strikethrough"></span>
+                      <span id="deal-price" class="deal-price-tag"></span>
+                    </div>
+                    <button id="book-deal-btn" class="btn-orange">Reserve Now</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty deal placeholder -->
+            <div id="no-deal-placeholder" class="empty-placeholder">
+              <div class="empty-icon">🏕️</div>
+              <h4 class="empty-title">No Deal Unlocked Yet</h4>
+              <p class="muted-text">Search the Booking tab a few times to trigger a concierge recommendation.</p>
+            </div>
+
+            <!-- Vibe check box -->
+            <div class="card">
+              <h3 class="card-title mb-1">Vibe Check</h3>
+              <p class="muted-text mb-3">Describe your dream trip — it logs a search telemetry event.</p>
+              <div class="row-gap">
+                <textarea id="vibe-input" rows="2" placeholder="e.g. A cozy cabin near a viewing deck, budget is tight..." class="textarea flex-1"></textarea>
+                <button id="vibe-btn" class="btn-primary px-4">Check Vibe</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────
+           TAB B: SPREADSHEET NOTES (SLL)
+      ───────────────────────────────────── -->
+      <section id="tab-scratchpad" class="tab-section hidden">
+
+        <!-- Top bar with file info and save/clear buttons -->
+        <div class="sheet-topbar">
+          <div>
+            <h2 class="section-title">Itinerary Scratchpad Grid</h2>
+            <p class="muted-text">Excel-style spreadsheet. A=Plan, B=Category, C=Companions, D=Budget, E=Reminders, F=Notes</p>
+            <div class="file-info-row">
+              <span id="file-id-badge" class="mono-badge">UNSAVED DOCUMENT</span>
+              <span id="file-name-label" class="file-name-text">Editing: New Itinerary</span>
+            </div>
+          </div>
+          <div class="row-gap">
+            <button id="clear-sheet-btn" class="btn-danger-sm">Clear / New Sheet</button>
+            <button id="save-itinerary-btn" class="btn-primary">Save Itinerary</button>
+          </div>
+        </div>
+
+        <div class="grid-12 mt-4">
+
+          <!-- Main spreadsheet + SLL nodes display -->
+          <div class="col-9 flex-col gap-4">
+
+            <!-- View toggle + formula bar -->
+            <div class="card">
+              <div class="view-toggle-row">
+                <button class="tab-btn-sm active" id="view-spreadsheet-btn">Spreadsheet View</button>
+                <button class="tab-btn-sm" id="view-sll-btn">SLL Grouped Engine</button>
+              </div>
+
+              <!-- Formula bar (spreadsheet mode) -->
+              <div id="formula-bar" class="formula-bar">
+                <span id="cell-address" class="cell-address">--</span>
+                <span class="fx-label">fx</span>
+                <input type="text" id="formula-input" placeholder="Select a cell to edit here..." class="formula-input" disabled />
+                <button id="apply-formula-btn" class="btn-secondary" disabled>Apply</button>
+              </div>
+
+              <!-- Spreadsheet grid (100 rows x 6 columns) -->
+              <div id="spreadsheet-view" class="sheet-scroll">
+                <table class="sheet-table" id="spreadsheet-table">
+                  <thead>
+                    <tr class="col-letters-row">
+                      <th class="row-num-header"></th>
+                      <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+                    </tr>
+                    <tr class="col-labels-row">
+                      <th class="row-num-header">Row</th>
+                      <th>Itinerary (A)</th>
+                      <th>Category (B)</th>
+                      <th>Companions (C)</th>
+                      <th>Budget (D)</th>
+                      <th>Reminders (E)</th>
+                      <th>Notes (F)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sheet-body">
+                    <!-- 100 rows generated by script.js -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- SLL grouped view (hidden when spreadsheet is active) -->
+              <div id="sll-view" class="hidden">
+                <p class="muted-text mb-3">Notes grouped by category using the linked list categorizer (no dictionary lookups).</p>
+                <div id="sll-grouped-output">
+                  <!-- Filled by script.js when SLL Engine button is clicked -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Live SLL nodes panel -->
+            <div class="card">
+              <h3 class="section-label">⛓️ Live Linked List Nodes</h3>
+              <p class="muted-text mb-3">
+                These nodes are retrieved from Python backend memory.
+                Saving an itinerary file appends rows as linked list nodes.
+              </p>
+              <div id="sll-nodes-grid" class="nodes-grid">
+                <p class="muted-text italic" id="sll-empty-msg">
+                  No nodes yet. Fill grid rows and click "Save Itinerary".
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Saved itinerary files sidebar -->
+          <div class="col-3">
+            <div class="card">
+              <div class="card-header mb-3">
+                <span class="card-title">📁 Saved Files</span>
+              </div>
+              <div id="saved-files-list" class="saved-files-list">
+                <p class="muted-text italic">No saved files yet. Fill the grid and save!</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────
+           TAB C: BOOKING & DISCOVERY
+      ───────────────────────────────────── -->
+      <section id="tab-discovery" class="tab-section hidden">
+        <div class="grid-12">
+
+          <!-- Left: Filters panel -->
+          <div class="col-4">
+            <div class="card">
+              <div class="card-header mb-4">
+                <span class="card-title">Camp Booking Filters</span>
+                <button id="reset-filters-btn" class="text-link">Reset</button>
+              </div>
+
+              <!-- Dates -->
+              <div class="two-col mb-4">
+                <div>
+                  <label class="field-label">Check In</label>
+                  <input type="date" id="check-in" value="2026-06-15" class="date-input" />
+                </div>
+                <div>
+                  <label class="field-label">Check Out</label>
+                  <input type="date" id="check-out" value="2026-06-20" class="date-input" />
+                </div>
+              </div>
+
+              <!-- Guest counters -->
+              <div class="guests-box mb-4">
+                <span class="field-label">Camp Guests</span>
+                <div class="guest-row">
+                  <span>Adults (18+)</span>
+                  <div class="counter-controls">
+                    <button class="counter-btn" data-target="adults" data-dir="-1">−</button>
+                    <span id="count-adults" class="counter-val">2</span>
+                    <button class="counter-btn" data-target="adults" data-dir="1">+</button>
+                  </div>
+                </div>
+                <div class="guest-row">
+                  <span>Children (2–12)</span>
+                  <div class="counter-controls">
+                    <button class="counter-btn" data-target="children" data-dir="-1">−</button>
+                    <span id="count-children" class="counter-val">0</span>
+                    <button class="counter-btn" data-target="children" data-dir="1">+</button>
+                  </div>
+                </div>
+                <div class="guest-row">
+                  <span>Toddlers</span>
+                  <div class="counter-controls">
+                    <button class="counter-btn" data-target="toddlers" data-dir="-1">−</button>
+                    <span id="count-toddlers" class="counter-val">0</span>
+                    <button class="counter-btn" data-target="toddlers" data-dir="1">+</button>
+                  </div>
+                </div>
+                <div class="guest-row">
+                  <span>Pets</span>
+                  <div class="counter-controls">
+                    <button class="counter-btn" data-target="pets" data-dir="-1">−</button>
+                    <span id="count-pets" class="counter-val">0</span>
+                    <button class="counter-btn" data-target="pets" data-dir="1">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dropdowns -->
+              <div class="flex-col gap-3 mb-4">
+                <div>
+                  <label class="field-label">Booking Vibe</label>
+                  <select id="filter-booking-type" class="select-input">
+                    <option value="All">All Vibes</option>
+                    <option value="Vacation">Vacation</option>
+                    <option value="Staycation">Staycation</option>
+                    <option value="Outing">Outing</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label">Room Style</label>
+                  <select id="filter-room-type" class="select-input">
+                    <option value="All">All Rooms</option>
+                    <option value="Single">Single Room</option>
+                    <option value="Suite">Luxurious Suite</option>
+                    <option value="Entire Home">Entire Home</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label">Property Category</label>
+                  <select id="filter-property-type" class="select-input">
+                    <option value="All">All Categories</option>
+                    <option value="Hotel">Hotel</option>
+                    <option value="Resort">Resort</option>
+                    <option value="Cabin">Cabin</option>
+                    <option value="Villa">Villa</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label">Destination</label>
+                  <select id="filter-city" class="select-input">
+                    <option value="All">All Cities</option>
+                    <option value="Baguio City">Baguio City</option>
+                    <option value="Tagaytay">Tagaytay</option>
+                    <option value="El Nido, Palawan">El Nido, Palawan</option>
+                    <option value="Boracay Island">Boracay Island</option>
+                    <option value="Panglao, Bohol">Panglao, Bohol</option>
+                    <option value="Cebu City">Cebu City</option>
+                    <option value="Siargao Island">Siargao Island</option>
+                    <option value="Samal Island, Davao">Samal Island, Davao</option>
+                    <option value="Camiguin">Camiguin</option>
+                    <option value="Bataan">Bataan</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Price range inputs -->
+              <div class="mb-4">
+                <span class="field-label">Budget Range</span>
+                <div class="price-row">
+                  <label class="field-label">Min ₱</label>
+                  <input type="number" id="min-price" value="0" min="0" max="99999" class="price-input" />
+                </div>
+                <input type="range" id="min-range" min="0" max="99999" step="100" value="0" class="range-slider" />
+                <div class="price-row">
+                  <label class="field-label">Max ₱</label>
+                  <input type="number" id="max-price" value="99999" min="0" max="99999" class="price-input" />
+                </div>
+                <input type="range" id="max-range" min="0" max="99999" step="100" value="99999" class="range-slider" />
+                <span class="muted-text" style="font-size:10px;">Slide or type, then click Search to use Binary Search!</span>
+              </div>
+
+              <!-- Amenities checkboxes -->
+              <div class="mb-4">
+                <span class="field-label">Amenities</span>
+                <div class="checkbox-group">
+                  <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Wi-Fi" /> Wi-Fi</label>
+                  <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Pool" /> Pool</label>
+                  <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Kitchen" /> Kitchen</label>
+                  <label class="checkbox-label"><input type="checkbox" class="amenity-cb" value="Parking" /> Parking</label>
+                </div>
+              </div>
+
+              <!-- Accessibility checkboxes -->
+              <div class="mb-4">
+                <span class="field-label">Accessibility</span>
+                <div class="checkbox-group">
+                  <label class="checkbox-label"><input type="checkbox" class="access-cb" value="Wheelchair Access" /> Wheelchair Access</label>
+                  <label class="checkbox-label"><input type="checkbox" class="access-cb" value="Ramp entry" /> Ramp Entry</label>
+                </div>
+              </div>
+
+              <button id="search-camps-btn" class="btn-primary w-full">🔍 Search Camps</button>
+            </div>
+          </div>
+
+          <!-- Right: Map + DS controls + listings -->
+          <div class="col-8 flex-col gap-4">
+
+            <!-- Text search bar -->
+            <div class="card flex-row gap-3 items-center">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="text-search" placeholder="Search by name or city (e.g. Siargao, Cabin)..." class="text-input flex-1" />
+              <button id="text-search-btn" class="btn-primary">Search</button>
+            </div>
+
+            <!-- DS algorithm buttons -->
+            <div class="card flex-row justify-between items-center flex-wrap gap-3">
+              <div>
+                <span class="card-title">Data Structure Controls</span>
+                <p class="muted-text" style="font-size:10px;">Run QuickSort or Binary Search manually on the Python backend</p>
+              </div>
+              <div class="row-gap">
+                <button id="quicksort-btn" class="btn-orange">↕ QuickSort Prices</button>
+                <button id="bsearch-btn" class="btn-primary">★ Binary Search Budget</button>
+              </div>
+            </div>
+
+            <!-- Interactive Map -->
+            <div class="card map-card">
+              <div class="map-header">
+                <div>
+                  <span class="muted-tag">Map Visualizer</span>
+                  <h4 class="card-title">🗺 StackIt Campsite Map</h4>
+                </div>
+                <div class="map-controls">
+                  <span id="map-status" class="mono-badge">Philippines 🇵🇭</span>
+                  <div class="zoom-controls">
+                    <button id="zoom-out-btn" class="zoom-btn">−</button>
+                    <button id="zoom-in-btn" class="zoom-btn">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SVG map container (draggable) -->
+              <div id="map-container" class="map-container">
+                <svg id="map-svg" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" class="map-svg">
+                  <defs>
+                    <pattern id="forestGrid" width="45" height="45" patternUnits="userSpaceOnUse">
+                      <path d="M 45 0 L 0 0 0 45" fill="none" stroke="#1c2518" stroke-width="1"/>
+                    </pattern>
+                    <radialGradient id="lakeGradient" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.8" />
+                      <stop offset="100%" stop-color="#1e293b" stop-opacity="0" />
+                    </radialGradient>
+                  </defs>
+                  <!-- Map content is built by script.js -->
+                  <g id="map-content">
+                    <rect x="-1600" y="-1200" width="4800" height="3600" fill="url(#forestGrid)" />
+                  </g>
+                </svg>
+
+                <!-- Property popup (overlaid on map) -->
+                <div id="map-popup" class="map-popup hidden">
+                  <img id="popup-img" src="" alt="" class="popup-img" />
+                  <div class="popup-info">
+                    <span id="popup-loc" class="tag-orange" style="font-size:8px;"></span>
+                    <h5 id="popup-name" class="popup-title"></h5>
+                    <p id="popup-pitch" class="popup-pitch"></p>
+                  </div>
+                  <div class="popup-actions">
+                    <button id="popup-close" class="btn-secondary" style="font-size:10px;">Close</button>
+                    <div>
+                      <span id="popup-price" class="popup-price"></span>
+                      <button id="popup-book" class="btn-primary" style="font-size:9px;padding:4px 8px;">Book Now</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Listings grid -->
+            <div id="listings-grid" class="listings-grid">
+              <!-- Property cards are rendered here by script.js -->
+              <div class="full-col empty-placeholder">
+                <p class="muted-text">Loading properties...</p>
+              </div>
+            </div>
+
+            <!-- Load more button -->
+            <div id="load-more-row" class="hidden text-center mt-2">
+              <button id="load-more-btn" class="btn-secondary px-6 py-2">Load More Listings</button>
+            </div>
+
+            <!-- Activity log / console -->
+            <div class="card">
+              <span class="field-label">📡 Activity Log</span>
+              <div id="activity-log" class="activity-log">
+                <span class="muted-text italic">No events yet. Search or interact to see logs.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────
+           TAB D: MY BOOKINGS & HISTORY
+      ───────────────────────────────────── -->
+      <section id="tab-reservations" class="tab-section hidden">
+
+        <!-- Page header -->
+        <div class="card reservations-header mb-4">
+          <span class="tag-orange">Reservations Ledger</span>
+          <h2 class="section-title mt-1">My Bookings &amp; History</h2>
+          <p class="muted-text mt-1">
+            See your active reservations and past trips. Switch profiles to view each traveler's history.
+          </p>
+        </div>
+
+        <div class="grid-12">
+
+          <!-- Active bookings -->
+          <div class="col-6 flex-col gap-3">
+            <div class="card">
+              <h3 class="card-title">🟢 Active Bookings (Present)</h3>
+            </div>
+            <div id="active-bookings-list" class="flex-col gap-3">
+              <!-- Filled by script.js -->
+            </div>
+          </div>
+
+          <!-- Past bookings -->
+          <div class="col-6 flex-col gap-3">
+            <div class="card">
+              <h3 class="card-title">📚 Past Bookings (History)</h3>
+            </div>
+            <div id="past-bookings-list" class="flex-col gap-3">
+              <!-- Filled by script.js -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- State trace -->
+        <div class="card mt-4">
+          <span class="field-label">📊 Booking State Trace</span>
+          <div id="booking-trace" class="activity-log">
+            <!-- Filled by script.js -->
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL: Save Itinerary
+  ═══════════════════════════════════════════════ -->
+  <div id="save-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h4 class="modal-title">💾 Save Itinerary As File</h4>
+      <p class="muted-text mb-3">Give this itinerary a name so you can reload it later.</p>
+      <input type="text" id="save-modal-name" placeholder="Enter filename..." class="text-input" />
+      <div class="modal-footer">
+        <button id="save-modal-cancel" class="btn-secondary">Cancel</button>
+        <button id="save-modal-confirm" class="btn-primary">Save File</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL: Deal Popup
+  ═══════════════════════════════════════════════ -->
+  <div id="deal-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h4 class="modal-title">🏆 Concierge Deal Found!</h4>
+      <h5 id="deal-modal-name" class="card-title mt-2"></h5>
+      <p id="deal-modal-pitch" class="muted-text mt-2 mb-3 italic"></p>
+      <div class="deal-footer mt-2">
+        <div>
+          <span id="deal-modal-original" class="strikethrough"></span>
+          <span id="deal-modal-price" class="deal-price-tag"></span>
+        </div>
+        <div class="row-gap">
+          <button id="deal-modal-close" class="btn-secondary">Close</button>
+          <button id="deal-modal-book" class="btn-orange">Lock Offer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Main JS file (static/script.js) loads last so DOM is ready -->
+  <script src="/static/script.js"></script>
+</body>
+</html>
