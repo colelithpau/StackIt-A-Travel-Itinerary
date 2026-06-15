@@ -1,1 +1,1 @@
-# DASTRUC-FINAL-PROJ---WE-BARE-BEARS
+# StackIt: A Travel Itinerary
