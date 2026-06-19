@@ -4,7 +4,6 @@
   Organized top to bottom: tokens → reset → layout → components → utilities
 */
 
-/* ─── CSS CUSTOM PROPERTIES (Design Tokens) ─── */
 :root {
   --bg-main:      #181c14;
   --bg-card:      #23271f;
