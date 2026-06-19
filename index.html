@@ -1,59 +1,56 @@
+<header>
 
-    </header>
+	<!-- Tab Navigation Bar -->
+	<nav class ="tab bar">
+		<div class="tab-bar-inner"> 
+			<button class="tab-btn active" data-tab-inner">
+			<button class="tab-btn active" data-tab="home">😊 Dashboard</button>
+			<button class="tab-btn" data-tab="scratchpad">📋 Spreadsheet Notes (SLL)</button>
+			<button class="tab-btn" data-tab="discovery">🏕️ Booking & Discovery</button>
+			<button class="tab-btn" data-tab="reservations">📚 My Bookings & History</button>
+		</div>
+	</nav>
+	<!-- Main Content Area -->
+	<main class="main-content">
 
-    <!-- Tab Navigation Bar -->
-    <nav class="tab-bar">
-      <div class="tab-bar-inner">
-        <button class="tab-btn active" data-tab="home">😊 Dashboard</button>
-        <button class="tab-btn" data-tab="scratchpad">📋 Spreadsheet Notes (SLL)</button>
-        <button class="tab-btn" data-tab="discovery">🏕️ Booking & Discovery</button>
-        <button class="tab-btn" data-tab="reservations">📚 My Bookings & History</button>
-      </div>
-    </nav>
+	
+	<!-- _______________________________________
+		TAB A: DASHBOARD
+	_______________________________________ -->
+	<section id="tab-home" class="tab-section active">
+		<div class="grid-12">
 
-    <!-- Main Content Area -->
-    <main class="main-content">
+		<!-- Left column: weather + nav help -->
+		<div class="col-4 flex-col gap-4">
+	
+		<!-- Weather widget -->
+		<div class="card">
+			<div class="card-header">
+				<span class="card-title"> Camp Weather</span>
+				<span class="muted-tag">Simulated</span>
+		</div>
+		<div id="weather-display" class="weather-box">
+			<!-- Filled by script.js based on check-in date -->
+			<span class="weather-icon">☀️</span>
+			<div>
+				<span class="weather-temp">--°C</span>
+				<span class="weather-label">Loading... </span>
+			</div>
+		</div>	
+		<p id="weather-rec" class="tip-box">Pick a check-in date to see conditions.</p>
+		</div>
 
-
-      <!-- ─────────────────────────────────────
-           TAB A: DASHBOARD
-      ───────────────────────────────────── -->
-      <section id="tab-home" class="tab-section active">
-        <div class="grid-12">
-
-          <!-- Left column: weather + nav help -->
-          <div class="col-4 flex-col gap-4">
-
-            <!-- Weather widget -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">🌤 Camp Weather</span>
-                <span class="muted-tag">Simulated</span>
-              </div>
-              <div id="weather-display" class="weather-box">
-                <!-- Filled by script.js based on check-in date -->
-                <span class="weather-icon">☀️</span>
-                <div>
-                  <span class="weather-temp">--°C</span>
-                  <span class="weather-label">Loading...</span>
-                </div>
-              </div>
-              <p id="weather-rec" class="tip-box">Pick a check-in date to see conditions.</p>
-            </div>
-
-            <!-- Navigation help card -->
-            <div class="card">
-              <span class="tag-label">Navigation Help</span>
-              <h4 class="card-title mt-1">Looking for Booking?</h4>
-              <p class="muted-text mt-1 mb-3">
-                Head to the <strong>Booking & Discovery</strong> tab above to search and reserve places.
-              </p>
-              <button class="btn-primary w-full" onclick="switchTab('discovery')">
-                Go to Booking Section 🏕️
-              </button>
-            </div>
-
-          </div>
+		<!-- Navigation help card -->
+		<div class="card">
+			<span class="tag-label">Navigation Help</span>
+			<h4 class="card-title mt-1">Looking for Booking?</h4>
+			<p class="muted-text mt-1 mb-3">
+				Head to the <strong>Booking & Discovery</strong> tab above to search and reserve places. </p>
+			<button class="btn-primary w-full" onclick="switchTab('discovery')">
+				Go to Booking Section 🏕️
+			</button>
+		</div>
+     </div>
 
           <!-- Right column: banner + deal + vibe check -->
           <div class="col-8 flex-col gap-4">
