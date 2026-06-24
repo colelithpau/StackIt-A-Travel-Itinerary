@@ -1,14 +1,13 @@
 # StackIt: A Travel Itinerary
-________________________________________
 
-Overview
-________________________________________
+# Overview
+
 An intelligent, multi-domain planning and
 reservation application designed to streamline organizing
 and booking outings, vacations, and events.
 
-System Workflow
-________________________________________
+# System Workflow
+
 1. Insert Item: Manually add an itinerary row into the Dynamic Array.
 2. Categorize: Use the Hash Map to group items by type (e.g., vacation vs. staycation).
 3. Sort by Budget: Execute QuickSort to organize plans from cheapest to most expensive.
@@ -17,8 +16,8 @@ ________________________________________
 provide accommodation suggestions based on the descriptive "user constraints."
 
 
-Ai Integration
-________________________________________
+# Ai Integration
+
 The application incorporates the Google Gemini 2.5 Flash API to process natural-language "vibe" requests—such as "a quiet anniversary staycation"—alongside the user's spreadsheet constraints to provide personalized, intelligent recommendations.System Advantages and Limitations
 
 Advantages: The use of in-memory data structures ensures zero-latency data writes and independent data sovereignty. Localized sorting and filtering bypass the lag associated with commercial third-party databases.
